@@ -8,6 +8,8 @@ import arc.func.Func;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.scene.ui.Button;
+import arc.scene.ui.Dialog;
+import arc.scene.ui.Label;
 import arc.scene.ui.TextButton;
 import arc.scene.ui.TextField.*;
 import arc.scene.ui.layout.Table;
@@ -21,6 +23,7 @@ import mindustry.game.EventType.*;
 import mindustry.gen.Tex;
 import mindustry.ui.Styles;
 import mindustry.Vars;
+import mindustry.ui.dialogs.BaseDialog;
 
 import static mi2u.MI2UVars.*;
 
@@ -271,6 +274,9 @@ public class MI2USettings{
                     value = !value;
                     setting.put(String.valueOf(value));
                     if(changed != null) changed.get(value);
+                    Dialog diag = new Dialog("awawa");
+                    diag.addCloseButton();
+                    diag.show();
                 }).update(b -> b.setChecked(value = setting.get().equals("true"))).left().with(c -> {
                     c.getLabelCell().width(200).height(32).padLeft(4f).padRight(4f);
                     c.getLabel().setWrap(true);
@@ -331,6 +337,16 @@ public class MI2USettings{
                     c.getLabel().setWrap(true);
                     c.getLabel().setAlignment(Align.left);
                     c.margin(3f);
+                }).self(c -> {
+                    c.get().clicked(() -> {
+                        // TODO: 让用户输入一个快捷键
+                        BaseDialog d = new BaseDialog("awawaa");
+                        d.addCloseButton();
+                        d.setFillParent(true);
+                        d.visible = true;
+                        d.cont.add(new Label("0w0"));
+                        d.show();
+                    });
                 });
 
                 table.add(help).right().self(c -> {

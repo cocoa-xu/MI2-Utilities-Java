@@ -25,7 +25,6 @@ public class KeyCombinationProcessor implements InputProcessor {
 
         // TODO: 从设置里读出来所有的快捷键
         processor.setKeyCombination(new KeyCombination(KeyCode.c, KeyCode.controlLeft), () -> {
-            Log.info("callback executed");
             boolean disableBuilding = MI2USettings.getBool("disableBuilding");
             MI2USettings.putBool("disableBuilding",!disableBuilding);
         });
@@ -37,10 +36,6 @@ public class KeyCombinationProcessor implements InputProcessor {
         this.combinations.put(key, action);
     }
 
-    public void removeKeyCombination(KeyCombination key) {
-        this.combinations.remove(key);
-    }
-
     @Override
     public boolean keyDown(KeyCode keycode) {
         KeyCombination key = new KeyCombination(keycode);
@@ -50,15 +45,12 @@ public class KeyCombinationProcessor implements InputProcessor {
             key.hasModifier = true;
         }
 
-        Log.info("keyDown hashCode: " + key.hashCode() + ", <" + key.toString() + ">");
-        Log.info("this.combinations.size()=" + this.combinations.size());
-
         KeyCombinationAction action = this.combinations.get(key);
 
-        if(action != null){
+        if (action != null) {
             action.execute();
             return true;
-        } else if(keycode == KeyCode.c){
+        } else if (keycode == KeyCode.c) {
             Log.info("hello orld");
             return true;
         }
