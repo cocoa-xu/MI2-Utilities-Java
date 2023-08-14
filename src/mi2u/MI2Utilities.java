@@ -4,6 +4,8 @@ import arc.*;
 import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.input.InputProcessor;
+import arc.input.KeyCode;
 import arc.math.*;
 import arc.scene.style.*;
 import arc.scene.ui.*;
@@ -70,6 +72,21 @@ public class MI2Utilities extends Mod{
                 ModifyFuncs.modifyVanilla();
                 RtsCommand.init();
                 BuildingStatsPopup.init();
+
+                // Add the inputProcessor to the UI input multiplexer
+                Core.input.getInputMultiplexer().addProcessor(0, new InputProcessor() {
+                    @Override
+                    public boolean keyDown(KeyCode keycode) {
+                        if(keycode == KeyCode.c && Core.input.keyDown(KeyCode.controlLeft)){
+                            Log.info("goodbye world");
+                            return true;
+                        } else if(keycode == KeyCode.c){
+                            Log.info("hello orld");
+                            return true;
+                        }
+                        return false;
+                    }
+                });
             });
 
             //popup too early will cause font rendering bug.
