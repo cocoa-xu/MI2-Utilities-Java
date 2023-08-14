@@ -274,6 +274,17 @@ public class MI2UI extends Mindow2{
             }
         });
 
+        settings.add(new CollapseGroupEntry("KeyCombinations", ""){
+            KeyCombinationEntry field1 = new KeyCombinationEntry("keyCombinations.disableBuildings", "@settings.keyCombinations.disableBuildings", null, null);
+
+            {
+                setDefaultHeader("@settings.keyCombinations");
+                builder = t -> {
+                    field1.build(t);
+                };
+            }
+        });
+
         settings.add(new CollapseGroupEntry("InputExtension", ""){
             CheckEntry check1 = new CheckEntry("inputReplace", "@settings.main.inputReplace", false, b -> {
                 if(b){

@@ -72,21 +72,7 @@ public class MI2Utilities extends Mod{
                 ModifyFuncs.modifyVanilla();
                 RtsCommand.init();
                 BuildingStatsPopup.init();
-
-                // Add the inputProcessor to the UI input multiplexer
-                Core.input.getInputMultiplexer().addProcessor(0, new InputProcessor() {
-                    @Override
-                    public boolean keyDown(KeyCode keycode) {
-                        if(keycode == KeyCode.c && Core.input.keyDown(KeyCode.controlLeft)){
-                            Log.info("goodbye world");
-                            return true;
-                        } else if(keycode == KeyCode.c){
-                            Log.info("hello orld");
-                            return true;
-                        }
-                        return false;
-                    }
-                });
+                KeyCombinationProcessor.init();
             });
 
             //popup too early will cause font rendering bug.

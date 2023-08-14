@@ -11,6 +11,7 @@ import arc.scene.ui.TextButton.*;
 import arc.struct.*;
 import arc.util.*;
 import mi2u.ai.*;
+import mi2u.io.MI2USettings;
 import mi2u.ui.*;
 import mindustry.ui.*;
 

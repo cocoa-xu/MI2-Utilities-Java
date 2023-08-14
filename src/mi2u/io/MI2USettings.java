@@ -14,9 +14,9 @@ import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.io.Writes;
-import mi2u.MI2UVars;
 import mi2u.game.MI2UEvents;
 import mi2u.ui.Mindow2;
+import mi2u.input.KeyCombination;
 import mindustry.game.EventType.*;
 import mindustry.gen.Tex;
 import mindustry.ui.Styles;
@@ -89,6 +89,25 @@ public class MI2USettings{
             ss.value = String.valueOf(value);
         }else{
             ss = new MI2USetting(name, String.valueOf(value));
+        }
+        modified = true;
+        return ss;
+    }
+
+    public static MI2USetting putKeyCombination(String name, KeyCombination value){
+        MI2USetting ss = map.get(name);
+        if (value == null) {
+            if (ss == null) {
+                ss = new MI2USetting(name, "");
+            } else {
+                ss.value = "";
+            }
+        } else {
+            if(ss != null){
+                ss.value = value.toString();
+            }else{
+                ss = new MI2USetting(name, value.toString());
+            }
         }
         modified = true;
         return ss;
@@ -278,6 +297,48 @@ public class MI2USettings{
             });
             b.update(() -> b.setChecked(value = setting.get().equals("true")));
             return b;
+        }
+    }
+
+    public static class KeyCombinationEntry extends SingleEntry{
+        public Cons<KeyCombination> changed;
+        public KeyCombination key;
+
+        public KeyCombinationEntry(String name, String help, KeyCombination key, Cons<KeyCombination> changed){
+            super(name, help);
+            this.changed = changed;
+            if (setting == null) {
+                setting = putKeyCombination(name, key);
+            } else {
+                String ss = setting.get();
+                if (ss != null) {
+                    this.key = KeyCombination.fromString(ss);
+                }
+            }
+        }
+
+        @Override
+        public void build(Table table){
+            if(table != null){
+                table.button(setting.value, textbtoggle, () -> {
+                    KeyCombination maybe = KeyCombination.fromString(setting.value);
+                    if(maybe == null) return;
+                    setting.put(setting.value);
+                    if(changed != null) changed.get(maybe);
+                }).update(b -> b.setText(setting.value)
+                ).left().with(c -> {
+                    c.getLabelCell().width(200).height(32).padLeft(4f).padRight(4f);
+                    c.getLabel().setWrap(true);
+                    c.getLabel().setAlignment(Align.left);
+                    c.margin(3f);
+                });
+
+                table.add(help).right().self(c -> {
+                    c.growX();
+                    c.get().setWrap(true);
+                    c.get().setAlignment(Align.right);
+                });
+            }
         }
     }
 
