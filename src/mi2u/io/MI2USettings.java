@@ -6,7 +6,10 @@ import arc.func.Boolp;
 import arc.func.Cons;
 import arc.func.Func;
 import arc.graphics.Color;
+import arc.input.KeyCode;
 import arc.math.Mathf;
+import arc.scene.event.InputEvent;
+import arc.scene.event.InputListener;
 import arc.scene.ui.Button;
 import arc.scene.ui.Dialog;
 import arc.scene.ui.Label;
@@ -17,6 +20,7 @@ import arc.struct.*;
 import arc.util.*;
 import arc.util.io.Writes;
 import mi2u.game.MI2UEvents;
+import mi2u.input.KeyCombinationProcessor;
 import mi2u.ui.Mindow2;
 import mi2u.input.KeyCombination;
 import mindustry.game.EventType.*;
@@ -144,6 +148,12 @@ public class MI2USettings{
 
     public static boolean getBool(String name){
         return getBool(name, false);
+    }
+
+    public static KeyCombination getKeyCombination(String name){
+        MI2USetting obj = map.get(name);
+        if(obj == null) return null;
+        return KeyCombination.fromString(obj.value);
     }
 
     public static boolean load(){
@@ -274,9 +284,6 @@ public class MI2USettings{
                     value = !value;
                     setting.put(String.valueOf(value));
                     if(changed != null) changed.get(value);
-                    Dialog diag = new Dialog("awawa");
-                    diag.addCloseButton();
-                    diag.show();
                 }).update(b -> b.setChecked(value = setting.get().equals("true"))).left().with(c -> {
                     c.getLabelCell().width(200).height(32).padLeft(4f).padRight(4f);
                     c.getLabel().setWrap(true);
@@ -339,12 +346,20 @@ public class MI2USettings{
                     c.margin(3f);
                 }).self(c -> {
                     c.get().clicked(() -> {
-                        // TODO: 让用户输入一个快捷键
-                        BaseDialog d = new BaseDialog("awawaa");
+                        BaseDialog d = new BaseDialog("@settings.keyCombinations");
                         d.addCloseButton();
                         d.setFillParent(true);
                         d.visible = true;
-                        d.cont.add(new Label("0w0"));
+                        d.cont.add(new Label("@settings.keyCombinations.help"));
+                        d.hidden(() -> {
+                            KeyCombinationProcessor.getInstance().cancelWaitingForKeyCombination();
+                        });
+                        d.shown(() -> {
+                            KeyCombinationProcessor.getInstance().waitingForKeyCombination((KeyCombination key) -> {
+                                setting = putKeyCombination(name, key);
+                                if (d.isShown()) d.hide();
+                            });
+                        });
                         d.show();
                     });
                 });
